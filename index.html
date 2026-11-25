@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Orbitova Downloader: free video downloader for creators</title>
+<meta name="description" content="A free desktop app for video creators to save reference and client footage in editor-ready 1080p H.264. Mac and Windows. Made by Orbitova.">
+<link rel="icon" type="image/png" href="favicon.png">
+<style>
+  :root {
+    --blue: #2563EB; --blue-dark: #1D4ED8; --ink: #0F172A; --muted: #64748B;
+    --bg: #FFFFFF; --soft: #F1F5FF; --card: #FFFFFF; --line: #E2E8F0;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --ink: #E2E8F0; --muted: #94A3B8; --bg: #0B1120; --soft: #111A33; --card: #131C31; --line: #1E293B; }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, sans-serif;
+         color: var(--ink); background: var(--bg); line-height: 1.6; }
+  a { color: var(--blue); }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 20px; }
+  header { display: flex; align-items: center; gap: 10px; padding: 18px 0; }
+  header img { width: 36px; height: 36px; }
+  header b { font-size: 18px; }
+  header .by { color: var(--muted); font-size: 14px; }
+  header nav { margin-left: auto; display: flex; gap: 18px; font-size: 14px; }
+  header nav a { color: var(--muted); text-decoration: none; }
+  header nav a:hover { color: var(--blue); }
+
+  .hero { display: grid; grid-template-columns: 1.05fr 1fr; gap: 48px; align-items: center; padding: 48px 0 64px; }
+  .pill { display: inline-block; background: var(--soft); color: var(--blue); font-weight: 600; font-size: 13px;
+          padding: 4px 12px; border-radius: 999px; }
+  h1 { font-size: clamp(32px, 5vw, 50px); line-height: 1.1; margin: 16px 0; letter-spacing: -0.02em; }
+  h1 span { color: var(--blue); }
+  .lead { font-size: 18px; color: var(--muted); margin: 0 0 28px; }
+  .buttons { display: flex; gap: 12px; flex-wrap: wrap; }
+  .btn { display: inline-flex; flex-direction: column; padding: 12px 22px; border-radius: 12px; text-decoration: none;
+         font-weight: 700; border: 2px solid var(--blue); min-width: 210px; }
+  .btn small { font-weight: 500; font-size: 12px; opacity: .85; }
+  .btn.primary { background: var(--blue); color: #fff; }
+  .btn.primary:hover { background: var(--blue-dark); border-color: var(--blue-dark); }
+  .btn.secondary { color: var(--blue); background: transparent; }
+  .btn.disabled { opacity: .45; pointer-events: none; }
+  .note { font-size: 13px; color: var(--muted); margin-top: 14px; }
+
+  /* mock of the app window */
+  .window { background: var(--card); border: 1px solid var(--line); border-radius: 14px; overflow: hidden;
+            box-shadow: 0 30px 60px -20px rgba(37, 99, 235, .35); font-size: 13px; }
+  .titlebar { display: flex; gap: 6px; padding: 10px 12px; border-bottom: 1px solid var(--line); }
+  .titlebar i { width: 11px; height: 11px; border-radius: 50%; background: #F87171; }
+  .titlebar i:nth-child(2) { background: #FBBF24; } .titlebar i:nth-child(3) { background: #34D399; }
+  .wbody { padding: 14px 16px; }
+  .whead { display: flex; align-items: center; gap: 8px; font-weight: 800; color: var(--blue); font-size: 16px; margin-bottom: 10px; }
+  .whead img { width: 26px; height: 26px; }
+  .links { border: 1px solid var(--line); border-radius: 6px; padding: 8px; color: var(--muted); font-family: ui-monospace, Menlo, monospace; font-size: 11.5px; }
+  .bar { height: 6px; background: var(--line); border-radius: 3px; margin: 12px 0; overflow: hidden; }
+  .bar div { width: 64%; height: 100%; background: var(--blue); animation: load 3s ease-in-out infinite; }
+  @keyframes load { 0% { width: 8%; } 100% { width: 96%; } }
+  .row { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid var(--line); gap: 10px; }
+  .row span:first-child { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .ok { color: #16A34A; font-weight: 600; white-space: nowrap; } .act { color: var(--blue); font-weight: 600; white-space: nowrap; }
+  .wait { color: var(--muted); white-space: nowrap; }
+  .wfoot { background: var(--blue); color: #fff; font-weight: 700; font-size: 11.5px; padding: 7px 12px; }
+
+  section { padding: 56px 0; }
+  section.soft { background: var(--soft); }
+  h2 { font-size: 30px; margin: 0 0 8px; letter-spacing: -0.01em; }
+  .sub { color: var(--muted); margin: 0 0 32px; }
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 20px; }
+  .card .ic { font-size: 24px; }
+  .card h3 { margin: 8px 0 6px; font-size: 17px; }
+  .card p { margin: 0; color: var(--muted); font-size: 15px; }
+  .steps { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  .steps ol { margin: 8px 0 0; padding-left: 20px; color: var(--muted); }
+  .steps li { margin: 6px 0; }
+  .steps li b { color: var(--ink); }
+
+  .promo { background: linear-gradient(135deg, #2563EB, #1E40AF); color: #fff; border-radius: 20px; padding: 40px;
+           display: grid; grid-template-columns: 1.4fr 1fr; gap: 28px; align-items: center; }
+  .promo h2 { color: #fff; }
+  .promo p { color: #DBEAFE; margin: 0 0 6px; }
+  .promo ul { margin: 12px 0 0; padding-left: 20px; color: #DBEAFE; }
+  .promo .cta { display: flex; flex-direction: column; gap: 10px; }
+  .promo a { text-align: center; padding: 13px 18px; border-radius: 12px; font-weight: 700; text-decoration: none; }
+  .promo .w { background: #fff; color: var(--blue); }
+  .promo .o { border: 2px solid #fff; color: #fff; }
+
+  .notice { border-left: 4px solid #F59E0B; background: var(--card); border-radius: 8px; padding: 14px 18px; color: var(--muted); }
+  .notice b { color: var(--ink); }
+  details { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 14px 18px; margin-bottom: 10px; }
+  summary { cursor: pointer; font-weight: 600; }
+  details p { color: var(--muted); margin: 10px 0 0; }
+  footer { padding: 32px 0 48px; color: var(--muted); font-size: 13px; border-top: 1px solid var(--line); }
+  footer a { color: var(--muted); }
+
+  /* grid children may shrink below their content width (stops sideways scrolling on phones) */
+  .hero > *, .grid > *, .steps > *, .promo > * { min-width: 0; }
+  h1 { overflow-wrap: anywhere; }
+  @media (max-width: 820px) {
+    .hero, .promo, .steps { grid-template-columns: minmax(0, 1fr); }
+    .grid { grid-template-columns: minmax(0, 1fr); }
+    .buttons { flex-direction: column; }
+    header nav { display: none; }
+    .btn { min-width: 0; flex: 1; }
+    .promo { padding: 28px 22px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <img src="icon.png" alt="">
+    <b>Orbitova Downloader</b><span class="by">by Orbitova</span>
+    <nav><a href="#features">Features</a><a href="#install">Install</a><a href="#faq">FAQ</a>
+      <a data-orbitova="nav" href="https://orbitova.in">Orbitova</a></nav>
+  </header>
+
+  <div class="hero">
+    <div>
+      <span class="pill">Free · Mac &amp; Windows · No sign-up</span>
+      <h1>Save footage in <span>editor-ready</span> quality, in one click.</h1>
+      <p class="lead">A free desktop app for video creators. Paste links, get clean 1080p H.264 files that drop straight into Premiere Pro and Final Cut. Made by Orbitova.</p>
+      <div class="buttons">
+        <a class="btn primary" id="dl-mac" data-os="mac" href="https://github.com/Branova/orbitova-tools/releases/latest/download/Orbitova-Downloader-mac.zip">Download for Mac<small>Apple Silicon · macOS 12+ · 100 MB</small></a>
+        <a class="btn secondary" id="dl-win" data-os="win" href="PASTE_WINDOWS_DOWNLOAD_LINK">Download for Windows<small>Windows 10 / 11</small></a>
+      </div>
+      <p class="note">Only download content you own or have permission to use.</p>
+    </div>
+
+    <div class="window" aria-hidden="true">
+      <div class="titlebar"><i></i><i></i><i></i></div>
+      <div class="wbody">
+        <div class="whead"><img src="icon.png" alt="">Orbitova Downloader</div>
+        <div class="links">https://youtube.com/watch?v=…<br>https://instagram.com/reel/…<br>https://vimeo.com/…</div>
+        <div class="bar"><div></div></div>
+        <div class="row"><span>Client brief – reference cut.mp4</span><span class="ok">✓ Done</span></div>
+        <div class="row"><span>Product reel – take 2</span><span class="act">Downloading 64%</span></div>
+        <div class="row"><span>https://vimeo.com/…</span><span class="wait">Queued</span></div>
+      </div>
+      <div class="wfoot">Free tool by Orbitova · Project management for creative teams →</div>
+    </div>
+  </div>
+</div>
+
+<section class="soft" id="features">
+  <div class="wrap">
+    <h2>Built for editors, not for clicks</h2>
+    <p class="sub">No ads, no pop-ups, no browser extensions. Just a clean little app.</p>
+    <div class="grid">
+      <div class="card"><div class="ic">🎬</div><h3>Editor-safe by default</h3><p>1080p H.264 out of the box, so files open in Premiere Pro and Final Cut without converting. 4K and audio-only too.</p></div>
+      <div class="card"><div class="ic">📋</div><h3>Paste many, get many</h3><p>Paste a list of links. They queue up and download one after another with live progress.</p></div>
+      <div class="card"><div class="ic">🌐</div><h3>1,700+ sites</h3><p>YouTube, Instagram, Facebook, TikTok, X, Vimeo, LinkedIn, Reddit and many more.</p></div>
+      <div class="card"><div class="ic">🔐</div><h3>Works with your login</h3><p>For posts that need a login, the app uses your browser's existing session. It never asks for your password.</p></div>
+      <div class="card"><div class="ic">⚡</div><h3>Always up to date</h3><p>The download engine updates itself each time you open the app, so it keeps working when sites change.</p></div>
+      <div class="card"><div class="ic">💻</div><h3>Runs on your computer</h3><p>Nothing is uploaded anywhere. Files go straight to the folder you choose.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="install">
+  <div class="wrap">
+    <h2>Install in a minute</h2>
+    <p class="sub">The app is free and not yet code-signed, so your computer asks once before opening it.</p>
+    <div class="steps">
+      <div class="card">
+        <h3>🖥 Mac</h3>
+        <ol>
+          <li>Download and open the <b>.zip</b>, then drag <b>Orbitova Downloader</b> into Applications.</li>
+          <li>First time only: <b>right-click the app → Open</b>, then <b>Open</b> again.<br>Or: System Settings → Privacy &amp; Security → <b>Open Anyway</b>.</li>
+          <li>Paste links and press <b>Download</b>.</li>
+        </ol>
+      </div>
+      <div class="card">
+        <h3>⊞ Windows</h3>
+        <ol>
+          <li>Download the <b>.zip</b>, right-click it → <b>Extract All</b>.</li>
+          <li>Open the folder and double-click <b>Orbitova Downloader.exe</b>.</li>
+          <li>If you see "Windows protected your PC": <b>More info → Run anyway</b>. Only once.</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="promo">
+      <div>
+        <h2>Made by Orbitova</h2>
+        <p>Orbitova is project management for creative agencies and video production teams.</p>
+        <ul>
+          <li>Projects, deliverables and video feedback in one place</li>
+          <li>A predictable lifecycle for every project, from brief to delivery</li>
+          <li>Built for creative teams. Made in India. Free to start.</li>
+        </ul>
+      </div>
+      <div class="cta">
+        <a class="w" data-orbitova="landing_promo" href="https://orbitova.in">Try Orbitova free →</a>
+        <a class="o" href="https://www.youtube.com/@Orbitova" target="_blank" rel="noopener">▶ Watch on YouTube</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="soft" id="faq">
+  <div class="wrap">
+    <h2>Questions</h2>
+    <p class="sub">&nbsp;</p>
+    <details><summary>Is it really free?</summary><p>Yes. No sign-up, no ads, no watermark. It's a free tool from the Orbitova team for the creator community.</p></details>
+    <details><summary>Which Macs does it work on?</summary><p>Macs with Apple Silicon (M1 or newer) running macOS 12 Monterey or later.</p></details>
+    <details><summary>A download says "Needs login". What do I do?</summary><p>Log into that site in your browser, then choose the browser under "Use login from browser" and try again. On Windows, Firefox works best for this.</p></details>
+    <details><summary>Why does my computer warn me when I first open it?</summary><p>The app isn't code-signed yet, which costs a yearly fee. The warning is standard for unsigned apps and only appears the first time.</p></details>
+    <details><summary>What can I download?</summary><p>Only content you own or have permission to use, such as your own uploads, client footage you've been given access to, or openly licensed material. You're responsible for following copyright law and each platform's terms.</p></details>
+  </div>
+</section>
+
+<div class="wrap">
+  <section>
+    <div class="notice"><b>Use responsibly.</b> Only download content you own or have permission to use. Orbitova Downloader is not affiliated with or endorsed by YouTube, Instagram, Facebook, TikTok, X, Vimeo, LinkedIn, Reddit or any other platform. Their names are trademarks of their respective owners and are used only to describe compatibility.</div>
+  </section>
+  <footer>
+    © <span id="yr"></span> Orbitova · <a data-orbitova="footer" href="https://orbitova.in">orbitova.in</a> ·
+    <a href="https://www.youtube.com/@Orbitova" target="_blank" rel="noopener">YouTube</a> ·
+    <a href="licenses.txt">Open-source licences</a> (FFmpeg GPL v3, yt-dlp, Python, Tcl/Tk)
+  </footer>
+</div>
+
+<script>
+  // Orbitova links: add tracking tags so Google Analytics on orbitova.in shows visits from this page.
+  document.querySelectorAll("a[data-orbitova]").forEach(a => {
+    a.href = "https://orbitova.in/?utm_source=downloader_landing&utm_medium=web&utm_campaign=free_tool&utm_content=" + a.dataset.orbitova;
+    a.target = "_blank"; a.rel = "noopener";
+  });
+  // Download buttons: until real links are pasted in, show "Coming soon" instead of a broken link.
+  document.querySelectorAll("a[data-os]").forEach(a => {
+    if (a.getAttribute("href").startsWith("PASTE_")) {
+      a.classList.add("disabled");
+      a.querySelector("small").textContent = "Coming soon";
+    }
+  });
+  // Put the visitor's own OS first and make it the primary button.
+  const isWin = /Windows/i.test(navigator.userAgent);
+  if (isWin) {
+    const mac = document.getElementById("dl-mac"), win = document.getElementById("dl-win");
+    mac.classList.replace("primary", "secondary"); win.classList.replace("secondary", "primary");
+    win.parentNode.insertBefore(win, mac);
+  }
+  document.getElementById("yr").textContent = new Date().getFullYear();
+</script>
+</body>
+</html>

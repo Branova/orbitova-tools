@@ -1,0 +1,48 @@
+THIRD-PARTY SOFTWARE NOTICES
+============================
+
+This application bundles the following third-party software. Each component
+remains under its own licence; full licence texts are in this folder.
+
+1. FFmpeg (ffmpeg, ffprobe)
+   Licence: GNU General Public License v3 (built with --enable-gpl --enable-version3)
+   See: ffmpeg-GPL-3.0.txt
+   macOS: FFmpeg 9.1 static build from https://www.martin-riedl.de
+          (build scripts: https://git.martin-riedl.de/ffmpeg/build-script)
+          Source: https://ffmpeg.org/releases/ffmpeg-9.1.tar.xz
+   Windows: FFmpeg release "essentials" build from https://www.gyan.dev/ffmpeg/builds/
+          Source: https://ffmpeg.org/releases/ (same version as shown by
+          "ffmpeg -version"; the build kit saves FFMPEG_VERSION.txt)
+   FFmpeg is a trademark of Fabrice Bellard. This app is not affiliated with
+   or endorsed by the FFmpeg project.
+
+   WRITTEN OFFER: For at least three (3) years from the date you received this
+   application, the distributor will provide the complete corresponding source
+   code for the GPL-licensed FFmpeg binaries included here, on request, for no
+   more than the cost of physically performing the distribution.
+
+2. yt-dlp
+   Licence: The Unlicense (public domain). See: yt-dlp-LICENSE.txt
+   Source: https://github.com/yt-dlp/yt-dlp
+   Note: yt-dlp is run as a separate program and updates itself.
+
+3. Python 3
+   Licence: PSF License Agreement. See: Python-LICENSE.txt
+   Source: https://www.python.org
+
+4. Tcl/Tk
+   Licence: BSD-style. See: Tcl-license.terms.txt, Tk-license.terms.txt
+   Source: https://www.tcl-lang.org
+
+5. PyInstaller bootloader
+   Licence: GPL v2 with a special exception permitting distribution of
+   bundled applications under any licence. https://pyinstaller.org
+
+TRADEMARKS
+YouTube, Instagram, Facebook, TikTok, X, Vimeo, LinkedIn and Reddit are
+trademarks of their respective owners. They are named only to describe
+compatibility. This app is not affiliated with or endorsed by any of them.
+
+USE RESPONSIBLY
+Only download content that you own or have permission to use. You are
+responsible for complying with copyright law and each platform's terms.
